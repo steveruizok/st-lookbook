@@ -1,0 +1,91 @@
+lb-look {
+  display: grid;
+  grid-template-rows: auto min-content min-content;
+  border: 1px solid #ccc;
+  resize: both;
+  overflow: auto;
+}
+
+lb-look .preview {
+  grid-row: 1;
+  display: grid;
+  padding: 32px 0;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.preview-size {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ccc;
+}
+.knobs {
+  display: grid;
+  width: 100%;
+  grid-template-columns: min-content auto;
+  grid-gap: 16px;
+  width: auto;
+  padding: 16px;
+  border-top: 1px solid #ccc;
+}
+
+.label {
+  align-self: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #333;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  min-width: 12px;
+}
+
+.knob-checkbox {
+  grid-column: 2;
+  cursor: pointer;
+}
+
+.knob-text {
+  grid-column: 2;
+  padding: 4px 8px;
+  font-size: 14px;
+  outline: none;
+  border: 1px solid #ccc;
+}
+
+.knob-text:focus {
+  border-bottom: 1px solid #3b99fc;
+}
+
+.knob-range {
+  display: flex;
+  width: 100%;
+  grid-column: 2;
+  outline: none;
+  justify-content: space-between;
+}
+
+.knob-range input {
+  width: 100%;
+  margin-right: 8px;
+}
+
+.knob-select {
+  grid-column: 2;
+  width: 100%;
+  padding: 4px 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.notes {
+  width: auto;
+  padding: 16px;
+  border-top: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.align-right {
+  text-align: right;
+}
