@@ -1,8 +1,8 @@
-# component-preview
+# lookbook
 
 @steveruizok
 
-A very small environment for previewing components and their props. A bit like Storybook, but micro. Novella?
+A very small environment for previewing components and their props. A lot like Storybook, but micro.
 
 Built with StencilJs.
 
@@ -10,76 +10,103 @@ Built with StencilJs.
 <img src="/readme/demo_gif.gif">
 </div>
 
+[On NPM](https://www.npmjs.com/package/st-lookbook)
+
 [Example Here](http://stencil-projects.firebaseapp.com).
 
 ## Usage
 
-This project has two webcomponents: `ok-preview` and `ok-preview-book`. 
+Add to your project using `npm install st-lookbook` or by including the following in your HTML head.
 
-### Ok-Preview
+`<script src='https://unpkg.com/st-lookbook@0.0.2/dist/app.js'></script>`
 
-The `ok-preview` previews a component and provides knobs for modifying that component's props. 
+The package comes with two components: `lb-look` and `lb-book`. 
 
-It accepts three props.
+### lb-look
+
+The `lb-look` component previews a component and provides knobs for modifying that component's props. 
+
+It accepts one prop: a Function that returns either JSX or a string (of HTML).
 
  Prop | Type | Description 
 --- | --- | ---
- `tag` | `string` | The tag of the component you'd like to preview. |
- `knobs` | `Object` | An object containing the knobs to provide. (optional) |
- `notes` | `string` | Any notes to display with this component's preview. (optional) |
+ `look` | `Function` | A function that sets knobs and returns JSX (or HTML as a string). |
+ 
+This look function should look similar to this:
 
-For the `knobs` object, include key value pairs, where the key is the name of the prop that this knob modifies, and the value is an initial value for that prop. The type of this initial value determines the input for this knob in the rendered component. Valid types for knobs are currently limited to `string`, `boolean`, and `Array<string>`.
+```
+function test(look) {
+		let label = look.text("Label", "No problem");
 
-**Example**
-
-```jsx
-render(
-  let knobs = {
-    label: "Click here!"
-    ghost: false,
-    disabled: false
-  }
-  
-  return(
-    <ok-preview tag="my-button" knobs={knobs} notes="This is my button." />
-    );
-);
+		return (<div>{label}</div>);
+	}
 ```
 
-### Ok-Preview-Book
+Or as a string:
 
-The `ok-preview-book` generates several `ok-preview` instances, based on its `components` prop, and provides an interface for selecting between those previews.
+```javascript
+function test(look) {
+		let label = look.text("Label", "No problem");
+
+		return (`<div>${label}</div>`);
+	}
+```
+
+The `lb-look` component passes itself to the function as an argument. The methods `text`, `boolean`, `array`, and `range` are available for setting knobs.
+
+### lb-book
+
+The `<lb-book/>` component generates several `lb-look` instances and organises them into a list. It takes an object of look functions (normally, an exports object). 
 
  Prop | Type | Description 
 --- | ---| ---
- `components` | `Array<Object>` | An array of objects with `tag`, `knobs`, and `notes` properties. 
+ `looks` | `Object` | An object of functions.
 
 **Example**
 
 ```jsx
+import * as looks from "./looks.tsx"
+
+...
+
 render(
-  let buttonOptions = {
-        tag: "ok-button",
-        knobs: {
-          label: "Click here!",
-          ghost: true,
-          disabled: false,
-          flag: [null, "4", "5", "7"]
-        },
-        notes: "This is a classic button."
-      };
-
-  let toggleOptions = {
-        tag: "ok-toggle",
-        knobs: {
-          disabled: false
-        },
-        notes: "This is something else."
-      };
-
   return(
-   <ok-preview-book components={[buttonOptions, toggleOptions]} />
+   <lb-book looks={looks} />
   );
 );
 ```
-   
+
+## Example in HTML
+
+```html
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Lookbook</title>
+</head>
+
+<script src='https://unpkg.com/st-lookbook@0.0.2/dist/app.js'></script>
+<link rel="stylesheet" href='https://unpkg.com/st-lookbook@0.0.2/dist/app.css'>
+
+</script>
+
+
+<body>
+	<lb-look id="look"></lb-look>
+</body>
+
+<script>
+	function test(look) {
+		let label = look.text("Label", "No problem");
+
+		return (`<div>${label}</div>`);
+	}
+
+	document.getElementById("look").look = test;
+</script>
+
+</html>
+```
+
