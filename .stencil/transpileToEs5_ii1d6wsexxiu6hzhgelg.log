@@ -1,0 +1,37 @@
+/*! Built with http://stenciljs.com */
+import { h } from './app.core.js';
+var OkToggle = /** @class */ (function () {
+    function OkToggle() {
+    }
+    OkToggle.prototype.render = function () {
+        this.elm.classList.toggle("disabled", this.disabled);
+        return h("p", null, "Hello OkToggle!");
+    };
+    Object.defineProperty(OkToggle, "is", {
+        get: function () { return "ok-toggle"; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OkToggle, "properties", {
+        get: function () {
+            return {
+                "disabled": {
+                    "type": Boolean,
+                    "attr": "disabled"
+                },
+                "elm": {
+                    "elementRef": true
+                }
+            };
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OkToggle, "style", {
+        get: function () { return "/**style-placeholder:ok-toggle:**/"; },
+        enumerable: true,
+        configurable: true
+    });
+    return OkToggle;
+}());
+export { OkToggle };

@@ -1,0 +1,7 @@
+ok-toggle {
+  /* Component styles go here */
+}
+
+.disabled {
+  opacity: 0.5;
+}

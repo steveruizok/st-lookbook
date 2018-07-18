@@ -1,0 +1,39 @@
+ok-button {
+  /* Component styles go here */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  position: relative;
+  overflow: hidden;
+  border-width: 1px solid #000;
+  background: #5851ff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #3e39cf;
+  color: white;
+}
+
+.ghost {
+  background: white;
+  color: #3e39cf;
+}
+
+.flag {
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  background: #39cf84;
+  color: #fff;
+}
+
+.disabled {
+  opacity: 0.5;
+}
