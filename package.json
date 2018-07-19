@@ -3,7 +3,7 @@
 	"namespace": "Lookbook",
 	"private": false,
 	"module": "dist/esm/index.js",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "Lookbook",
 	"scripts": {
 		"build": "stencil build --prerender",

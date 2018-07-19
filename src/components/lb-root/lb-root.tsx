@@ -1,5 +1,5 @@
 import { Component } from "@stencil/core";
-import * as looks from "./looks";
+import * as looks from "../looks";
 
 @Component({
 	tag: "lb-root",

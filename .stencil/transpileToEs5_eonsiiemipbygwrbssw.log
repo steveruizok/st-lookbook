@@ -1,0 +1,58 @@
+/*! Built with http://stenciljs.com */
+import { h } from './app.core.js';
+var OkButton = /** @class */ (function () {
+    function OkButton() {
+        this.label = "Get started";
+        this.ghost = false;
+        this.disabled = false;
+        this.flag = null;
+    }
+    OkButton.prototype.render = function () {
+        var flag;
+        this.elm.classList.toggle("ghost", this.ghost);
+        this.elm.classList.toggle("disabled", this.disabled);
+        if (this.flag) {
+            flag = h("div", { class: "flag" }, this.flag);
+        }
+        return (h("div", null, flag, h("p", null, this.label)));
+    };
+    Object.defineProperty(OkButton, "is", {
+        get: function () { return "ok-button"; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OkButton, "properties", {
+        get: function () {
+            return {
+                "disabled": {
+                    "type": Boolean,
+                    "attr": "disabled"
+                },
+                "elm": {
+                    "elementRef": true
+                },
+                "flag": {
+                    "type": String,
+                    "attr": "flag"
+                },
+                "ghost": {
+                    "type": Boolean,
+                    "attr": "ghost"
+                },
+                "label": {
+                    "type": String,
+                    "attr": "label"
+                }
+            };
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OkButton, "style", {
+        get: function () { return "/**style-placeholder:ok-button:**/"; },
+        enumerable: true,
+        configurable: true
+    });
+    return OkButton;
+}());
+export { OkButton };

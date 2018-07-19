@@ -1,5 +1,6 @@
 lb-look {
 	display: grid;
+	grid-template-rows: auto -webkit-min-content -webkit-min-content;
 	grid-template-rows: auto min-content min-content;
 	border: 1px solid #ccc;
 	resize: both;
@@ -9,9 +10,12 @@ lb-look {
 lb-look .preview {
 	grid-row: 1;
 	display: grid;
-	padding: 32px;
+	padding: 32px 0;
+	width: 100%;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
 	align-items: center;
-	justify-items: center;
+	/* justify-content: center; */
 	background: #fff;
 }
 
@@ -25,6 +29,7 @@ lb-look .preview {
 .knobs {
 	display: grid;
 	width: 100%;
+	grid-template-columns: -webkit-min-content auto;
 	grid-template-columns: min-content auto;
 	grid-gap: 16px;
 	width: auto;
@@ -33,6 +38,7 @@ lb-look .preview {
 }
 
 .label {
+	-ms-flex-item-align: center;
 	align-self: center;
 	font-size: 12px;
 	letter-spacing: 1px;
@@ -60,10 +66,14 @@ lb-look .preview {
 }
 
 .knob-range {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
 	width: 100%;
 	grid-column: 2;
 	outline: none;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
 	justify-content: space-between;
 }
 

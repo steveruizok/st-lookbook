@@ -1,0 +1,327 @@
+/*! Built with http://stenciljs.com */
+import { h } from './app.core.js';
+var LbBook = /** @class */ (function () {
+    function LbBook() {
+        this.looks = {};
+        this.links = [];
+        this.look_components = {};
+    }
+    LbBook.prototype.componentWillLoad = function () {
+        var _this = this;
+        if (!this.looks) {
+            this.look_components = [h("div", null, "Feed me looks.")];
+            return;
+        }
+        var keys = Object.keys(this.looks);
+        keys.forEach(function (key) {
+            var component = (h("lb-look", { ref: function (el) {
+                    _this.current_component = el;
+                }, look: _this.looks[key] }));
+            var link = (h("div", { onClick: function () {
+                    _this.current = key;
+                } }, h("a", { href: "#" + key }, key)));
+            _this.links.push(link);
+            _this.look_components[key] = component;
+        });
+        this.current = window.location.hash
+            ? window.location.hash.slice(1)
+            : keys[0];
+    };
+    LbBook.prototype.componentDidUpdate = function () { };
+    LbBook.prototype.render = function () {
+        var look = this.look_components[this.current];
+        return [
+            h("div", { class: "looks-list" }, this.links),
+            h("div", { class: "look" }, look)
+        ];
+    };
+    Object.defineProperty(LbBook, "is", {
+        get: function () { return "lb-book"; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LbBook, "properties", {
+        get: function () {
+            return {
+                "current": {
+                    "state": true
+                },
+                "looks": {
+                    "type": "Any",
+                    "attr": "looks"
+                }
+            };
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LbBook, "style", {
+        get: function () { return "/**style-placeholder:lb-book:**/"; },
+        enumerable: true,
+        configurable: true
+    });
+    return LbBook;
+}());
+var LbLook = /** @class */ (function () {
+    function LbLook() {
+        var _this = this;
+        this.values = {};
+        this.inputs = [];
+        this.knobs = [];
+        this.notes = [];
+        // Set a value for the inputs
+        this.setValue = function (key, value) {
+            var change = {};
+            change[key] = value;
+            var newValues = Object.assign({}, _this.values, change);
+            _this.values = newValues;
+        };
+        // get a value (existing or initial)
+        this.getValue = function (label, initial) {
+            if (_this.values[label] === undefined) {
+                _this.values[label] = initial;
+            }
+            return _this.values[label];
+        };
+        // Knobs
+        // Add a knob
+        this.addKnob = function (label, input) {
+            _this.knobs.push([h("label", { class: "label" }, label), input]);
+        };
+        // Add a note
+        this.addNote = function (label, note) {
+            _this.notes.push(h("div", { class: "note-container" }, h("label", { class: "label" }, label), h("p", { class: "note" }, note)));
+        };
+        // Set a text knob
+        this.text = function (label, initial) {
+            var current = _this.getValue(label, initial);
+            var input = (h("input", { id: label, type: "text", class: "knob-text", value: current, onInput: function (ev) {
+                    var target = ev.target;
+                    var value = target.value;
+                    _this.setValue(label, value);
+                } }));
+            _this.addKnob(label, input);
+            return current;
+        };
+        // Set a boolean knob
+        this.boolean = function (label, initial) {
+            var current = _this.getValue(label, initial);
+            var input = (h("input", { class: "knob-checkbox", id: label, checked: current, type: "checkbox", onChange: function (ev) {
+                    var target = ev.target;
+                    var value = target.checked;
+                    _this.setValue(label, value);
+                } }));
+            _this.addKnob(label, input);
+            return current;
+        };
+        // sets a select knob
+        this.select = function (label, options) {
+            var current = _this.getValue(label, options[0]);
+            var input = (h("select", { class: "knob-select", id: label, onChange: function (ev) {
+                    var target = ev.target;
+                    var value = target.value;
+                    _this.setValue(label, value);
+                } }, options.map(function (i) {
+                return h("option", { value: i }, i);
+            })));
+            _this.addKnob(label, input);
+            return current;
+        };
+        // sets a range knob
+        this.range = function (label, initial, min, max, step) {
+            if (step === void 0) { step = 1; }
+            var current = _this.getValue(label, initial);
+            var input = [
+                h("div", { class: "knob-range" }, h("input", { type: "range", id: label, value: current, min: min, max: max, step: step, onInput: function (ev) {
+                        var target = ev.target;
+                        var value = target.value;
+                        _this.setValue(label, value);
+                    } }), h("span", { class: "label align-right" }, current))
+            ];
+            _this.addKnob(label, input);
+            return current;
+        };
+        this.note = function (note, label) {
+            _this.addNote(label, note);
+        };
+        this.setHTMLStringContent = function () {
+            console.log(_this.stringContent);
+            if (!_this.stringContent) {
+                return;
+            }
+            _this.preview.innerHTML = "";
+            _this.preview.appendChild(_this.stringContent.firstChild);
+        };
+    }
+    // clear notes and knobs before update
+    LbLook.prototype.componentWillUpdate = function () {
+        this.knobs = [];
+        this.notes = [];
+    };
+    LbLook.prototype.componentDidLoad = function () {
+        this.setHTMLStringContent();
+    };
+    LbLook.prototype.componentDidUpdate = function () {
+        this.setHTMLStringContent();
+    };
+    // Render
+    LbLook.prototype.render = function () {
+        var _this = this;
+        console.log("so far ok");
+        this.stringContent = null;
+        var content = this.look(this);
+        if (typeof content === "string") {
+            this.stringContent = document
+                .createRange()
+                .createContextualFragment(content);
+            content = null;
+        }
+        var notes;
+        if (this.notes.length > 0) {
+            notes = h("div", { class: "notes" }, this.notes);
+        }
+        return [
+            h("div", { class: "preview", ref: function (el) {
+                    _this.preview = el;
+                } }, content),
+            h("div", { class: "knobs" }, this.knobs),
+            notes
+        ];
+    };
+    Object.defineProperty(LbLook, "is", {
+        get: function () { return "lb-look"; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LbLook, "properties", {
+        get: function () {
+            return {
+                "look": {
+                    "type": "Any",
+                    "attr": "look"
+                },
+                "values": {
+                    "state": true
+                }
+            };
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LbLook, "style", {
+        get: function () { return "/**style-placeholder:lb-look:**/"; },
+        enumerable: true,
+        configurable: true
+    });
+    return LbLook;
+}());
+function button(preview) {
+    preview.name = "Example";
+    var text = preview.text("Text", "Get started");
+    var ghost = preview.boolean("Ghost", false);
+    var flag = preview.select("Flag", ["1", "2", "3"]);
+    var range = preview.range("!s", 1, 0, 5);
+    preview.note("This is a note about this button", "general");
+    var points = "";
+    for (var i = 0; i < range; i++) {
+        points += "!";
+    }
+    return h("ok-button", { label: text + points, ghost: ghost, flag: flag });
+}
+function look_2(preview) {
+    var ghost = preview.boolean("Ghost", false);
+    var greeting = preview.select("Greeting", [null, "Friendly", "Rude"]);
+    var greet;
+    switch (greeting) {
+        case "Friendly":
+            greet = h("p", null, "\"Hello, friend.\"");
+            break;
+        case "Rude":
+            greet = (h("p", null, "\"Oh, it's ", h("b", null, "you"), ". *sigh*\""));
+            break;
+    }
+    return (h("div", null, greet, h("ok-button", { label: "Get started!", ghost: ghost })));
+}
+function string(preview) {
+    var text = preview.text("Text", "This look returns a string.");
+    return "<p>" + text + "</p>";
+}
+var looks = /*#__PURE__*/ Object.freeze({
+    button: button,
+    look_2: look_2,
+    string: string
+});
+var LbRoot = /** @class */ (function () {
+    function LbRoot() {
+    }
+    LbRoot.prototype.render = function () {
+        return (h("main", { class: "narrow" }, h("h3", null, "st-lookbook"), h("p", null, "@steveruizok"), h("p", null, h("code", null, "npm i st-lookbook")), h("lb-book", { looks: looks })));
+    };
+    Object.defineProperty(LbRoot, "is", {
+        get: function () { return "lb-root"; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LbRoot, "style", {
+        get: function () { return "/**style-placeholder:lb-root:**/"; },
+        enumerable: true,
+        configurable: true
+    });
+    return LbRoot;
+}());
+var OkButton = /** @class */ (function () {
+    function OkButton() {
+        this.label = "Get started";
+        this.ghost = false;
+        this.disabled = false;
+        this.flag = null;
+    }
+    OkButton.prototype.render = function () {
+        var flag;
+        this.elm.classList.toggle("ghost", this.ghost);
+        this.elm.classList.toggle("disabled", this.disabled);
+        if (this.flag) {
+            flag = h("div", { class: "flag" }, this.flag);
+        }
+        return (h("div", null, flag, h("p", null, this.label)));
+    };
+    Object.defineProperty(OkButton, "is", {
+        get: function () { return "ok-button"; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OkButton, "properties", {
+        get: function () {
+            return {
+                "disabled": {
+                    "type": Boolean,
+                    "attr": "disabled"
+                },
+                "elm": {
+                    "elementRef": true
+                },
+                "flag": {
+                    "type": String,
+                    "attr": "flag"
+                },
+                "ghost": {
+                    "type": Boolean,
+                    "attr": "ghost"
+                },
+                "label": {
+                    "type": String,
+                    "attr": "label"
+                }
+            };
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OkButton, "style", {
+        get: function () { return "/**style-placeholder:ok-button:**/"; },
+        enumerable: true,
+        configurable: true
+    });
+    return OkButton;
+}());
+export { LbBook, LbLook, LbRoot, OkButton };
